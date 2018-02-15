@@ -4,14 +4,16 @@
 
 {% block content %}
   <h1>Forum</h1>
-  <p>Description of your forum and user guidelines go here.</p>
-  
+  <p>This is a forum to talk about whatever you want.</p>
+  {% if loggedIn %}
   <form action='/posted' method="post">
     <textarea name="message" style="width:100%; height:100px;"></textarea>
     <br>
     <input type="submit" value="Post">
   </form>
-  
+  {% else %} 
+  <p> You gotta be logged in to do anything my dude. </p>
+  {% endif %}
   {{ past_posts }}
 
 
