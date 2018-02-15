@@ -44,10 +44,10 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    log = false
+    log = False
     if 'user_data' in session:
-        log = true
-    return render_template('home.html', past_posts=posts_to_html(), loggedIn = true)
+        log = True
+    return render_template('home.html', past_posts=posts_to_html(), loggedIn = True)
 
 @app.route('/posted', methods=['POST'])
 def post():
