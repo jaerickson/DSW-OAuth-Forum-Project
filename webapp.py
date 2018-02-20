@@ -53,10 +53,13 @@ def home():
     return render_template('home.html', past_posts=posts_to_html(), loggedIn = True)
 
 def posts_to_html():
-    ret = "<table> <tr> <th>UserName</th> <th>Post</th> </tr>"
+    ret = ""
+    ret +=  Markup("<table> <tr> <th>UserName</th> <th>Post</th> </tr>")
     with open('postData.json','r+') as f:
         for i in f:
             ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
+    ret += Markup("</table>")
+    return ret
             
             
 
