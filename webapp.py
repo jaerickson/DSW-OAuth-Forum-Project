@@ -37,7 +37,7 @@ def loadData(newData):
             f.seek(0)
             f.truncate()
             json.dump(data,f)
-    except:
+
         
         
 
