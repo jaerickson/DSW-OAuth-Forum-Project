@@ -37,7 +37,7 @@ def loadData(newData):
             f.seek(0)
             f.truncate()
             json.dump(data,f)
-    exept:
+    except:
         
         
 
@@ -53,11 +53,16 @@ def home():
     return render_template('home.html', past_posts=posts_to_html(), loggedIn = True)
 
 def posts_to_html():
-    
+    ret = "<table> <tr> <th>UserName</th> <th>Post</th> </tr>"
+    with open('postData.json','r+') as f:
+        for i in f:
+            ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
+            
+            
 
 @app.route('/posted', methods=['POST'])
 def post():
-    loadData({session['user_data']['username']:request.args['Post']})
+    loadData([session['user_data']['username'],request.args['Post']])
     home()
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.  
     #Every post should include the username of the poster and text of the post. 
