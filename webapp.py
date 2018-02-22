@@ -71,7 +71,7 @@ def posts_to_html():
 @app.route('/posted', methods=['POST'])
 def post():
     #print(session['user_data'])
-    #print([session['user_data']['login'],request.form['Post']])
+    print(session['user_data']['login'])
     #loadData([session['user_data']['login'],request.form['Post']])
     return home()
     
