@@ -32,6 +32,7 @@ github = oauth.remote_app(
 file = 'postData.json'
 os.system("echo '[]'>" + file)
 def loadData(newData):
+    print(newData)
     try:
         with open('postData.json','r+') as f:
             data = json.load(f)
