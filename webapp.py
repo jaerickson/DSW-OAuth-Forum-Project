@@ -72,7 +72,7 @@ def posts_to_html():
 def post():
     #print(session['user_data'])
     #print([session['user_data']['login'],request.form['Post']])
-    loadData([session['user_data']['login'],request.form['Post']])
+    #loadData([session['user_data']['login'],request.form['Post']])
     return home()
     
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.  
