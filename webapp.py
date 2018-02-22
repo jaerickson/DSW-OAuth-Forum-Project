@@ -66,7 +66,7 @@ def posts_to_html():
 
 @app.route('/posted', methods=['POST'])
 def post():
-    loadData([session['user_data']['login'],request.args['Post']])
+    loadData([session['user_data']['login'],request.form['Post']])
     return home()
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.  
     #Every post should include the username of the poster and text of the post. 
