@@ -68,7 +68,11 @@ def posts_to_html():
 def post():
     print(session['user_data'])
     loadData([session['user_data']['login'],request.form['Post']])
-    return home()
+    #return home()
+    log = False
+    if 'user_data' in session:
+        log = True
+    return render_template('home.html', past_posts=posts_to_html(), loggedIn = log)
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.  
     #Every post should include the username of the poster and text of the post. 
 
