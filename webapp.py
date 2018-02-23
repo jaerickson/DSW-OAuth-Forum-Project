@@ -62,7 +62,7 @@ def posts_to_html():
             for i in f:
                 ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
                 print("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>")
-                print(i[0])
+                print(i[0][0])
                 print(i)
     except:
         print("error")
