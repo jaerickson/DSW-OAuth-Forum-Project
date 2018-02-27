@@ -76,7 +76,7 @@ def posts_to_html():
 def post():
     #print(session['user_data'])
     print(request.form['message'])
-    message = str([session['user_data']['login'],request.form['message']])
+    message = [str(session['user_data']['login']),request.form['message']]
     loadData(message)
     return home()
     
