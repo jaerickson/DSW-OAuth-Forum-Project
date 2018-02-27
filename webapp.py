@@ -60,10 +60,14 @@ def posts_to_html():
     try:
         with open('postData.json','r') as f:
             for i in f:
+                print(i)
+                print(i[0])
                 ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
     except:
         print("error")
     ret += Markup("</table>")
+    print(ret)
+    
     return ret
             
             
@@ -72,7 +76,7 @@ def posts_to_html():
 def post():
     #print(session['user_data'])
     print(request.form['message'])
-    message = str([session['user_data']['login']+request.form['message']])
+    message = str([session['user_data']['login'],request.form['message']])
     loadData(message)
     return home()
     
