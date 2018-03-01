@@ -59,7 +59,8 @@ def posts_to_html():
     ret +=  Markup("<table> <tr> <th>UserName</th> <th>Post</th> </tr>")
     try:
         with open('postData.json','r') as f:
-            for i in f:
+            data = json.load(f)
+            for i in data:
                 print(i)
                 ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
     except:
