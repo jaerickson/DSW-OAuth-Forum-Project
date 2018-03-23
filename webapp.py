@@ -5,13 +5,27 @@ from flask import render_template
 import pprint
 import os
 import json
-
+from bson.objectid import ObjectId
+import pymongo
+ 
+ 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 app = Flask(__name__)
 
 app.debug = True #Change this to False for production
 
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
 oauth = OAuth(app)
+
+url = 'mongodb://{}:{}@{}:{}/{}'.format(
+        os.environ["MONGO_USERNAME"],
+        os.environ["MONGO_PASSWORD"],
+        os.environ["MONGO_HOST"],
+        os.environ["MONGO_PORT"],
+        os.environ["MONGO_DBNAME"])
+client = pymongo.MongoClient(url)
+db = client[os.environ["MONGO_DBNAME"]]
+collection = db['collection']
 
 #Set up GitHub as OAuth provider
 github = oauth.remote_app(
@@ -32,6 +46,7 @@ github = oauth.remote_app(
 file = 'postData.json'
 os.system("echo '[]'>" + file)
 def loadData(newData):
+#here we need to load in the database such that the data returned will be appended to the db
     print(newData)
     try:
         with open('postData.json','r+') as f:
@@ -42,6 +57,7 @@ def loadData(newData):
             json.dump(data,f)
     except:
         print("Error Loading Data")
+    db.collection.insert({"posts":newData})
     
 @app.context_processor
 def inject_logged_in():
@@ -54,17 +70,32 @@ def home():
         log = True
     return render_template('home.html', past_posts=posts_to_html(), loggedIn = log)
 
+@app.route('/delete', methods=['POST'])
+def delete():
+    id = ObjectId(request.form['delete'])
+    print(id)
+    print(db.collection.delete_one({'_id':id}))
+    return home()
+	
 def posts_to_html():
     ret = ""
-    ret +=  Markup("<table> <tr> <th>UserName</th> <th>Post</th> </tr>")
-    try:
-        with open('postData.json','r') as f:
-            data = json.load(f)
-            for i in data:
-                print(i)
-                ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
-    except:
-        print("error")
+    ret +=  Markup("<table> <tr> <th>UserName</th> <th>Post</th> <th>Delete</th></tr>")
+	
+    for i in collection.find():
+        s = str(i['_id'])
+        if 'user_data' in session:
+            ret += Markup("<tr> <td>" + i['posts'][0] +  "</td> <td>" +i['posts'][1] + "</td></tr> <th><form action = \"/delete\" method = \"post\"> <button type=\"submit\" name=\"delete\" value=\"" + s + "\">Delete</button></form></th>")
+        else: 
+            ret += Markup("<tr> <td>" + i['posts'][0] +  "</td> <td>" +i['posts'][1] + "</td><td></td>")
+    #try:
+    #here we have to get data from the database such that it is readable to the html 
+    #    with open('postData.json','r') as f:
+    #        data = json.load(f)
+    #        for i in data:
+    #            print(i)
+    #            ret += Markup("<tr> <td>" + i[0] +  "</td> <td>" +i[1] + "</td></tr>") 
+    #except:
+    #    print("error")
     ret += Markup("</table>")
     print(ret)
     
@@ -86,7 +117,7 @@ def post():
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
 def login():   
-    return github.authorize(callback=url_for('authorized', _external=True, _scheme='https')) #callback URL must match the pre-configured callback URL
+    return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
 def logout():
